@@ -24,7 +24,7 @@ const env = {
 const config: ExpoConfig = {
   name: env.appName,
   slug: env.appSlug,
-  owner: "ayoomen-2-2",
+  owner: "quizoi",
   version: "1.0.0",
   orientation: "portrait",
   icon: "./assets/images/icon.png",
@@ -61,6 +61,11 @@ const config: ExpoConfig = {
     ["expo-build-properties", { android: { buildArchs: ["armeabi-v7a", "arm64-v8a"], minSdkVersion: 24 } }],
   ],
   experiments: { typedRoutes: true, reactCompiler: true },
+  extra: {
+    eas: {
+      projectId: "395b93e4-f9e1-466b-83c6-d69dffbb3755",
+    },
+  },
 };
 
 export default config;

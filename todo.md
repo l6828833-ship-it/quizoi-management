@@ -64,4 +64,8 @@
 - [x] Force a bright light visual system across the Android player with explicit high-contrast text colors.
 - [x] Repair Progress and quiz-screen scrolling so content is not trapped below the Android navigation area.
 - [x] Deliver published Supabase dashboard questions to the Android player and validate the shared content flow.
-- [ ] Connect Quizio Android builds to the user’s new Expo account without changing Supabase content delivery.
+- [x] Connect Quizio Android builds to the user’s new Expo account without changing Supabase content delivery.
+- [x] Remove the obsolete Expo project binding to ayoomen so the new Expo account can initialize Quizio independently.
+- [ ] Resolve the remote Expo project ownership conflict between ayoomen and ayoomen-2-2.
+- [x] Reconfigure Quizio for the new QUIZOI Expo account and safely initialize its independent EAS project.
+- [x] Validate the QUIZOI Expo access token with Expo CLI before EAS initialization.
