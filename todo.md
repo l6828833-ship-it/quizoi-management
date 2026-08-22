@@ -50,3 +50,4 @@
 - [x] Repair the corrupted Docker ignore file so Fly receives the panel deployment source during builds.
 - [ ] Add a Fly.io deploy token to GitHub as `FLY_API_TOKEN` and run the repository-based deployment workflow.
 - [x] Add and lock react-native-css-interop so the Fly production web export resolves its JSX runtime.
+- [x] Fix Metro cache resolution for the clean Fly.io production build and verify the full Docker build path.
