@@ -4,6 +4,11 @@ primary_region = "iad"
 [build]
   dockerfile = "Dockerfile"
 
+  [build.args]
+    SUPABASE_URL = "https://anjnjbiixzbwcmqritxj.supabase.co"
+    SUPABASE_PUBLISHABLE_KEY = "sb_publishable_JrJx0Hkkz3p7fBMT_z08WA_A9Dv5HQn"
+    QUIZIO_OWNER_EMAIL = "aymenlasfar4@icloud.com"
+
 [env]
   NODE_ENV = "production"
   PORT = "8080"

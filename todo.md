@@ -57,3 +57,4 @@
 - [x] Design and apply Supabase quiz-content schema and row-level security policies.
 - [x] Replace MySQL and Manus-style OAuth with Supabase-backed content operations and email/password owner sign-in.
 - [ ] Configure Fly.io Supabase variables, deploy the migrated panel, and validate the live owner sign-in flow.
+- [x] Remove the exposed Supabase security-definer helper warning and revalidate row-level security.
