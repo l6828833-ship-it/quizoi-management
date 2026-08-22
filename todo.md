@@ -45,5 +45,5 @@
 - [x] Document Fly.io runtime variables, secrets, database connectivity, and deployment settings for Quizio.
 - [x] Add a production Dockerfile and Fly.io configuration so the Quizio repository can be deployed on Fly.io.
 - [x] Configure Fly.io to expose only the private quiz-upload management panel and block public player routes.
-- [ ] Commit and push the verified panel-only Fly.io configuration to the selected GitHub repository.
+- [x] Commit and push the verified panel-only Fly.io configuration to the selected GitHub repository.
 - [x] Transfer the complete verified Quizio source required for the panel-only Fly.io build into the selected GitHub repository.
