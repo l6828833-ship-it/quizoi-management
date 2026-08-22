@@ -66,6 +66,8 @@
 - [x] Deliver published Supabase dashboard questions to the Android player and validate the shared content flow.
 - [x] Connect Quizio Android builds to the user’s new Expo account without changing Supabase content delivery.
 - [x] Remove the obsolete Expo project binding to ayoomen so the new Expo account can initialize Quizio independently.
-- [ ] Resolve the remote Expo project ownership conflict between ayoomen and ayoomen-2-2.
+- [x] Resolve the remote Expo project ownership conflict by creating an independent QUIZOI EAS project instead of using the legacy ayoomen project.
 - [x] Reconfigure Quizio for the new QUIZOI Expo account and safely initialize its independent EAS project.
 - [x] Validate the QUIZOI Expo access token with Expo CLI before EAS initialization.
+- [x] Retain the legacy ayoomen owner stored by the Manus Publish preview, following the user’s updated account choice.
+- [x] Reconfigure Quizio’s Android build path to use the user-selected ayoomen Expo account and its existing Publish binding.

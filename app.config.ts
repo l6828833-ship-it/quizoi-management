@@ -24,7 +24,7 @@ const env = {
 const config: ExpoConfig = {
   name: env.appName,
   slug: env.appSlug,
-  owner: "quizoi",
+  owner: "ayoomen",
   version: "1.0.0",
   orientation: "portrait",
   icon: "./assets/images/icon.png",
@@ -63,7 +63,7 @@ const config: ExpoConfig = {
   experiments: { typedRoutes: true, reactCompiler: true },
   extra: {
     eas: {
-      projectId: "395b93e4-f9e1-466b-83c6-d69dffbb3755",
+      projectId: "909a59f0-e32e-482d-9669-c46b5e63f9ea",
     },
   },
 };
