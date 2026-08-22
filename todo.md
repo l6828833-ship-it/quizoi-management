@@ -47,3 +47,5 @@
 - [x] Configure Fly.io to expose only the private quiz-upload management panel and block public player routes.
 - [x] Commit and push the verified panel-only Fly.io configuration to the selected GitHub repository.
 - [x] Transfer the complete verified Quizio source required for the panel-only Fly.io build into the selected GitHub repository.
+- [x] Repair the corrupted Docker ignore file so Fly receives the panel deployment source during builds.
+- [ ] Add a Fly.io deploy token to GitHub as `FLY_API_TOKEN` and run the repository-based deployment workflow.
