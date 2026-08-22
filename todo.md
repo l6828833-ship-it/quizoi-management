@@ -64,3 +64,4 @@
 - [x] Force a bright light visual system across the Android player with explicit high-contrast text colors.
 - [x] Repair Progress and quiz-screen scrolling so content is not trapped below the Android navigation area.
 - [x] Deliver published Supabase dashboard questions to the Android player and validate the shared content flow.
+- [ ] Connect Quizio Android builds to the user’s new Expo account without changing Supabase content delivery.
