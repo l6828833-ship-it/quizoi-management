@@ -58,3 +58,6 @@
 - [x] Replace MySQL and Manus-style OAuth with Supabase-backed content operations and email/password owner sign-in.
 - [ ] Configure Fly.io Supabase variables, deploy the migrated panel, and validate the live owner sign-in flow.
 - [x] Remove the exposed Supabase security-definer helper warning and revalidate row-level security.
+- [x] Prevent the Fly.io management deployment from rendering Quizio player routes and verify the upload panel is the only public UI.
+- [ ] Redeploy the Supabase email/password panel revision to Fly.io and verify the live owner-login form replaces the obsolete OAuth button.
+- [x] Replace the dark Content Studio presentation with a bright, high-contrast, upload-focused dashboard design.

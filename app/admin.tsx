@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
@@ -6,6 +7,19 @@ import { ScreenContainer } from "@/components/screen-container";
 import WebContentStudio from "@/components/content-studio-web";
 
 export default function AdminRoute() {
+  useEffect(() => {
+    if (Platform.OS !== "web" || typeof document === "undefined") return;
+    const root = document.documentElement;
+    const previousBackground = root.style.getPropertyValue("--color-background");
+    const previousForeground = root.style.getPropertyValue("--color-foreground");
+    root.style.setProperty("--color-background", "#F8FAFC");
+    root.style.setProperty("--color-foreground", "#111827");
+    return () => {
+      root.style.setProperty("--color-background", previousBackground);
+      root.style.setProperty("--color-foreground", previousForeground);
+    };
+  }, []);
+
   if (Platform.OS === "web") return <WebContentStudio />;
   return <NativeAdminPlaceholder />;
 }
