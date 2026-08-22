@@ -1,0 +1,49 @@
+# Project TODO
+
+- [x] Establish QuizSprint mobile screen architecture and navigation.
+- [x] Create local quiz data models and a curated starter question bank.
+- [x] Implement Quick Play, Category Challenge, Daily Quiz, and Streak Mode.
+- [x] Implement timed answer flow, scoring, XP, streaks, hint support, and review answers.
+- [x] Persist local player progress and settings.
+- [x] Build Home, Result, Progress, and Settings experiences with accessible interaction states.
+- [x] Apply QuizSprint branding, including a custom app icon and mobile configuration.
+- [x] Add automated tests for scoring, question selection, and quiz-session state.
+- [x] Validate TypeScript, linting, and local quiz behavior.
+- [x] Save a release-ready checkpoint and provide Android APK generation instructions.
+- [x] Replace the generated app imagery with the user-provided Quizio brand asset and refresh the release checkpoint.
+- [x] Rename all user-facing app identifiers from QuizSprint to Quizio and refresh the release checkpoint.
+- [x] Restore preview availability after the project-rebuild message.
+- [x] Fix the quiz-screen layout so the current question prompt is fully visible above the answer choices.
+- [x] Render the question in a dedicated quiz card so its prompt remains visible in every answer and timeout state.
+- [x] Restart the non-responsive Quizio development service and verify preview availability.
+- [x] Repair missing glyph icons in the bottom navigation and progress screen.
+- [x] Define database fields and validation rules for remotely managed Quizio questions.
+- [x] Design the administrator content-platform screens and flows.
+- [x] Create secured database tables and administrator-only quiz management APIs.
+- [x] Build an administrator content platform for creating, importing, publishing, pausing, and deleting questions.
+- [x] Load published database questions into the player quiz modes with a local fallback.
+- [x] Test administrative access controls, content validation, and remote question delivery.
+- [x] Document how to upload, publish, and manage quizzes from the new platform.
+- [x] Define the browser-only administrative boundary and MySQL-backed deployment model.
+- [x] Design the browser-only private dashboard layout and workflow.
+- [x] Convert Content Studio into a private web dashboard unavailable from the Android app.
+- [x] Remove Android administration controls while preserving read-only published question delivery.
+- [x] Validate browser dashboard authorization and Android player-only behavior.
+- [x] Document browser dashboard access and Play Store-safe administration workflow.
+- [ ] Enable the user-owned Supabase project connection for Quizio.
+- [ ] Design Supabase tables, access policies, and production cutover.
+- [ ] Migrate Quizio server, web dashboard, and player delivery to Supabase.
+- [ ] Transfer approved content and validate Supabase-backed operations.
+- [ ] Document independent Supabase ownership, backup, and operating procedures.
+- [x] Define Quizio’s modern playful visual system from the supplied game-app references.
+- [x] Create original Quizio mascot and decorative game assets.
+- [x] Redesign the Home, mode picker, category picker, quiz, result, progress, and settings screens.
+- [x] Validate the redesigned player experience for contrast, navigation, and quiz flow integrity.
+- [x] Define the local-hosted Quizio dashboard model and its player-network limitations.
+- [x] Document local dashboard operation and the recommended production hosting path.
+- [x] Create and verify a local point-in-time Quizio source and documentation backup package.
+- [x] Document Fly.io runtime variables, secrets, database connectivity, and deployment settings for Quizio.
+- [x] Add a production Dockerfile and Fly.io configuration so the Quizio repository can be deployed on Fly.io.
+- [x] Configure Fly.io to expose only the private quiz-upload management panel and block public player routes.
+- [ ] Commit and push the verified panel-only Fly.io configuration to the selected GitHub repository.
+- [x] Transfer the complete verified Quizio source required for the panel-only Fly.io build into the selected GitHub repository.
