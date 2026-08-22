@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import { FlatList, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useFocusEffect } from "expo-router";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -10,6 +10,7 @@ import { calculateAnswerPoints, getLevelProgress, getQuestionsForMode, getQuesti
 import { consumeHintToken, completeQuiz, loadPlayerSettings, loadPlayerStats } from "@/lib/quiz-store";
 import { quizHaptics } from "@/lib/haptics";
 import { trpc } from "@/lib/trpc";
+import { loadPublishedSupabaseQuestions } from "@/lib/supabase";
 import type { AnswerState, PlayerSettings, PlayerStats, QuizMode, QuizQuestion, QuizResponse } from "@/lib/quiz-types";
 
 type Surface = "home" | "modes" | "category" | "quiz" | "result" | "review";
@@ -30,6 +31,7 @@ export default function HomeScreen() {
   const [secondsLeft, setSecondsLeft] = useState(12);
   const [hiddenOptions, setHiddenOptions] = useState<number[]>([]);
   const [xpGained, setXpGained] = useState(0);
+  const [supabaseQuestions, setSupabaseQuestions] = useState<QuizQuestion[]>([]);
   const publishedContent = trpc.quiz.published.useQuery({ limit: 100 }, { staleTime: 30_000, retry: 1 });
   const remoteQuestions = useMemo<QuizQuestion[]>(() => (publishedContent.data ?? []).map((question) => ({
     id: `remote-${question.id}`,
@@ -41,6 +43,16 @@ export default function HomeScreen() {
     categoryName: question.categoryName,
     difficulty: question.difficulty,
   })), [publishedContent.data]);
+
+  useEffect(() => {
+    let active = true;
+    loadPublishedSupabaseQuestions().then((questions) => {
+      if (active) setSupabaseQuestions(questions);
+    }).catch(() => {
+      if (active) setSupabaseQuestions([]);
+    });
+    return () => { active = false; };
+  }, []);
 
   const refreshProfile = useCallback(() => {
     Promise.all([loadPlayerStats(), loadPlayerSettings()]).then(([savedStats, savedSettings]) => { setStats(savedStats); setSettings(savedSettings); }).catch(() => undefined);
@@ -74,7 +86,8 @@ export default function HomeScreen() {
 
   const beginQuiz = (nextMode: QuizMode, categoryId?: string) => {
     if (nextMode === "daily" && dailyDone) return;
-    const remoteForMode = getQuestionsFromPool(remoteQuestions, nextMode, categoryId);
+    const sharedQuestions = supabaseQuestions.length ? supabaseQuestions : remoteQuestions;
+    const remoteForMode = getQuestionsFromPool(sharedQuestions, nextMode, categoryId);
     const bundledForMode = getQuestionsForMode(nextMode, categoryId);
     const requiredCount = nextMode === "streak" ? 5 : 10;
     const remoteIds = new Set(remoteForMode.map((question) => question.id));
@@ -146,6 +159,7 @@ function QuizScreen({ question, currentIndex, total, score, secondsLeft, timerSe
 
   return (
     <ScreenContainer className="px-5 pt-3" containerClassName="bg-background">
+      <ScrollView contentContainerStyle={quizScrollStyles.content} showsVerticalScrollIndicator={false}>
       <View style={styles.quizHeader}>
         <View>
           <Text style={[styles.quizCount, isDark && darkQuestionStyles.metaText]}>QUESTION {currentIndex + 1} OF {total}</Text>
@@ -161,11 +175,16 @@ function QuizScreen({ question, currentIndex, total, score, secondsLeft, timerSe
       <View style={styles.answers}>{question.options.map((option, index) => <AnswerCard key={option} option={option} index={index} selected={selectedOption === index} correct={correctOption === index} locked={answerState !== "idle"} hidden={hiddenOptions.includes(index)} onPress={() => onSelect(index)} />)}</View>
       {answerState === "idle" ? <Pressable onPress={onHint} disabled={hintTokens < 1 || hiddenOptions.length > 0} accessibilityRole="button" accessibilityState={{ disabled: hintTokens < 1 || hiddenOptions.length > 0 }} style={({ pressed }) => [styles.hintButton, (hintTokens < 1 || hiddenOptions.length > 0) && styles.disabled, pressed && styles.pressed]}><MaterialIcons name="lightbulb" size={19} color="#B45309" /><Text style={styles.hintText}>{hiddenOptions.length ? "Hint used for this question" : `Use a hint · ${hintTokens} left`}</Text></Pressable> : <View style={[styles.feedbackBox, isDark && darkQuestionStyles.feedbackBox]}><View style={[styles.feedbackIcon, { backgroundColor: answerState === "correct" ? "#DCFCE7" : "#FFE4E6" }]}><MaterialIcons name={answerState === "correct" ? "check" : "info"} size={22} color={answerState === "correct" ? "#16A34A" : "#E11D48"} /></View><View style={styles.feedbackCopy}><Text style={[styles.feedbackTitle, isDark && darkQuestionStyles.promptText]}>{answerMessage}</Text><Text style={[styles.feedbackText, isDark && darkQuestionStyles.metaText]}>{question.explanation}</Text></View></View>}
       {answerState !== "idle" && <Pressable onPress={onContinue} accessibilityRole="button" style={({ pressed }) => [styles.continueButton, pressed && styles.pressed]}><Text style={styles.continueText}>{currentIndex === total - 1 ? "See results" : "Continue"}</Text><MaterialIcons name="arrow-forward" size={20} color="#FFFFFF" /></Pressable>}
+      </ScrollView>
     </ScreenContainer>
   );
 }
 
 function AnswerCard({ option, index, selected, correct, locked, hidden, onPress }: { option: string; index: number; selected: boolean; correct: boolean; locked: boolean; hidden: boolean; onPress: () => void }) { const letter = ["A", "B", "C", "D"][index]; const stateStyle = locked && correct ? styles.answerCorrect : locked && selected ? styles.answerIncorrect : hidden ? styles.answerHidden : undefined; const labelStyle = locked && correct ? styles.answerLabelCorrect : locked && selected ? styles.answerLabelIncorrect : undefined; return <Pressable onPress={onPress} disabled={locked || hidden} accessibilityRole="button" accessibilityState={{ disabled: locked || hidden, selected }} style={({ pressed }) => [styles.answerCard, stateStyle, pressed && !locked && styles.pressed]}><View style={[styles.answerLetter, labelStyle]}><Text style={[styles.answerLetterText, locked && correct && styles.whiteText, locked && selected && !correct && styles.whiteText]}>{letter}</Text></View><Text style={[styles.answerText, hidden && styles.hiddenText, locked && (correct || selected) && styles.whiteText]}>{hidden ? "Eliminated" : option}</Text>{locked && correct && <MaterialIcons name="check-circle" size={21} color="#FFFFFF" />}{locked && selected && !correct && <MaterialIcons name="cancel" size={21} color="#FFFFFF" />}</Pressable>; }
+
+const quizScrollStyles = StyleSheet.create({
+  content: { paddingBottom: 120 },
+});
 
 function ResultScreen({ score, accuracy, correct, total, xpGained, mode, onPlayAgain, onReview, onHome }: { score: number; accuracy: number; correct: number; total: number; xpGained: number; mode: QuizMode; onPlayAgain: () => void; onReview: () => void; onHome: () => void }) { const headline = accuracy >= 80 ? "Excellent sprint!" : accuracy >= 50 ? "Strong effort!" : "Every round teaches you something."; return <ScreenContainer className="px-5 pt-5" containerClassName="bg-background"><View style={styles.resultTop}><View style={styles.resultTrophy}><MaterialIcons name="emoji-events" size={42} color="#B45309" /></View><Text style={styles.eyebrow}>ROUND COMPLETE</Text><Text style={styles.resultHeadline}>{headline}</Text><Text style={styles.resultSub}>{mode === "daily" ? "Your Daily Quiz is recorded for today." : "Your latest round is saved on this device."}</Text></View><View style={styles.scoreCard}><Text style={styles.scoreOverline}>YOUR SCORE</Text><Text style={styles.resultScore}>{score}</Text><View style={styles.resultLine} /><View style={styles.resultMetrics}><ResultMetric value={`${accuracy}%`} label="Accuracy" /><ResultMetric value={`${correct}/${total}`} label="Correct" /><ResultMetric value={`+${xpGained}`} label="XP gained" /></View></View><Pressable onPress={onPlayAgain} accessibilityRole="button" style={({ pressed }) => [styles.continueButton, pressed && styles.pressed]}><Text style={styles.continueText}>Play again</Text><MaterialIcons name="replay" size={20} color="#FFFFFF" /></Pressable><Pressable onPress={onReview} accessibilityRole="button" style={({ pressed }) => [styles.secondaryButton, pressed && styles.pressed]}><Text style={styles.secondaryText}>Review answers</Text><MaterialIcons name="format-list-bulleted" size={20} color="#312E81" /></Pressable><Pressable onPress={onHome} accessibilityRole="button" style={({ pressed }) => [styles.tertiaryButton, pressed && styles.pressed]}><Text style={styles.tertiaryText}>Back to home</Text></Pressable></ScreenContainer>; }
 

@@ -61,3 +61,6 @@
 - [x] Prevent the Fly.io management deployment from rendering Quizio player routes and verify the upload panel is the only public UI.
 - [ ] Redeploy the Supabase email/password panel revision to Fly.io and verify the live owner-login form replaces the obsolete OAuth button.
 - [x] Replace the dark Content Studio presentation with a bright, high-contrast, upload-focused dashboard design.
+- [x] Force a bright light visual system across the Android player with explicit high-contrast text colors.
+- [x] Repair Progress and quiz-screen scrolling so content is not trapped below the Android navigation area.
+- [x] Deliver published Supabase dashboard questions to the Android player and validate the shared content flow.

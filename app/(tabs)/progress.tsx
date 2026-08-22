@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useFocusEffect } from "expo-router";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
@@ -23,7 +23,8 @@ export default function ProgressScreen() {
   const levelProgress = getLevelProgress(stats.xp);
 
   return (
-    <ScreenContainer className="px-5 pt-4" containerClassName="bg-background">
+    <ScreenContainer containerClassName="bg-background">
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
       <View style={styles.header}>
         <Text style={styles.eyebrow}>YOUR PRIZE SHELF</Text>
         <Text style={styles.title}>Growing every{`\n`}round.</Text>
@@ -54,6 +55,7 @@ export default function ProgressScreen() {
           <Text style={styles.noteText}>Quizio stores your scores and preferences on this device.</Text>
         </View>
       </View>
+      </ScrollView>
     </ScreenContainer>
   );
 }
@@ -63,6 +65,7 @@ function Metric({ icon, label, value, color }: { icon: React.ComponentProps<type
 }
 
 const styles = StyleSheet.create({
+  scrollContent: { paddingHorizontal: 20, paddingTop: 16, paddingBottom: 120 },
   header: { marginBottom: 20 }, eyebrow: { color: "#8B5CF6", fontWeight: "900", letterSpacing: 1.2, fontSize: 10 }, title: { color: "#171411", fontSize: 34, lineHeight: 38, fontWeight: "900", marginTop: 4 }, subtitle: { color: "#8A7D70", fontSize: 14, lineHeight: 21, marginTop: 5, fontWeight: "600" },
   levelCard: { backgroundColor: "#FFB638", borderRadius: 28, padding: 20, flexDirection: "row", alignItems: "center", shadowColor: "#D98400", shadowOpacity: 0.18, shadowRadius: 15, elevation: 4 }, levelBadge: { width: 60, height: 60, borderRadius: 24, backgroundColor: "#FFEF5A", borderWidth: 3, borderColor: "#171411", alignItems: "center", justifyContent: "center", marginRight: 15 }, levelNumber: { color: "#171411", fontSize: 27, fontWeight: "900" }, levelDetails: { flex: 1 }, levelLabel: { color: "#171411", fontWeight: "900", fontSize: 19 }, levelCaption: { color: "#70420B", fontSize: 12, marginTop: 3, fontWeight: "700" }, track: { height: 8, borderRadius: 99, backgroundColor: "#E89410", marginTop: 11, overflow: "hidden" }, fill: { height: "100%", borderRadius: 99, backgroundColor: "#14B8A6" },
   metrics: { flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", marginTop: 18 }, metric: { width: "47.5%", backgroundColor: "#FFFFFF", borderRadius: 22, padding: 15, marginBottom: 12, borderWidth: 1 }, metricIcon: { width: 38, height: 38, borderRadius: 14, alignItems: "center", justifyContent: "center", marginBottom: 14 }, metricValue: { fontWeight: "900", fontSize: 24, color: "#171411" }, metricLabel: { color: "#8A7D70", fontSize: 11, marginTop: 2, fontWeight: "700" },

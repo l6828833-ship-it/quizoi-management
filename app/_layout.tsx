@@ -92,7 +92,7 @@ export default function RootLayout() {
             <Stack.Screen name="(tabs)" />
             <Stack.Screen name="oauth/callback" />
           </Stack>
-          <StatusBar style="auto" />
+          <StatusBar style="dark" backgroundColor="#F8FAFC" />
         </QueryClientProvider>
       </trpc.Provider>
     </GestureHandlerRootView>
