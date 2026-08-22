@@ -47,7 +47,13 @@
 - [x] Configure Fly.io to expose only the private quiz-upload management panel and block public player routes.
 - [x] Commit and push the verified panel-only Fly.io configuration to the selected GitHub repository.
 - [x] Transfer the complete verified Quizio source required for the panel-only Fly.io build into the selected GitHub repository.
+- [ ] Trigger and verify a fresh Fly.io deployment from the Dockerfile-enabled GitHub main branch.
 - [x] Repair the corrupted Docker ignore file so Fly receives the panel deployment source during builds.
 - [ ] Add a Fly.io deploy token to GitHub as `FLY_API_TOKEN` and run the repository-based deployment workflow.
 - [x] Add and lock react-native-css-interop so the Fly production web export resolves its JSX runtime.
 - [x] Fix Metro cache resolution for the clean Fly.io production build and verify the full Docker build path.
+- [ ] Configure and verify production owner sign-in for the deployed Quizio management dashboard.
+- [x] Confirm the user-owned Supabase project and owner authentication access for Quizio.
+- [x] Design and apply Supabase quiz-content schema and row-level security policies.
+- [x] Replace MySQL and Manus-style OAuth with Supabase-backed content operations and email/password owner sign-in.
+- [ ] Configure Fly.io Supabase variables, deploy the migrated panel, and validate the live owner sign-in flow.

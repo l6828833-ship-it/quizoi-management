@@ -1,62 +1,55 @@
-# Deploy Quizio on Fly.io
+# Deploy Quizio Content Studio on Fly.io
 
-## Files Required in GitHub
+## Scope
 
-Commit the project’s `Dockerfile`, `.dockerignore`, `fly.toml`, `app.config.ts`, `package.json`, `server/_core/index.ts`, and `server/_core/oauth.ts` to the GitHub repository that Fly deploys. Fly detects the Dockerfile and uses it instead of trying to infer the Expo runtime. The Fly manifest sets `DEPLOY_TARGET=panel`, so the Node server redirects `/` to `/admin`, serves the dashboard only at `/admin`, and returns `404` for player-facing routes.
+This repository deploys **only** Quizio’s private browser dashboard. The player game is not exposed: `/` redirects to `/admin`, and player-facing paths return `404`.
 
-## Fly Secrets
+## Required repository files
 
-Set these in **Fly dashboard → Secrets**. Do not put them in GitHub, `fly.toml`, or Fly build arguments.
+Keep `Dockerfile`, `.dockerignore`, `fly.toml`, `package.json`, `pnpm-lock.yaml`, `metro.config.js`, `app/admin.tsx`, `components/content-studio-web.tsx`, `lib/supabase.ts`, and `supabase/migrations/20260822_quizio_content_studio.sql` in the GitHub branch that Fly builds.
 
-| Secret | Required | Purpose |
-|---|---:|---|
-| `DATABASE_URL` | Yes | Production MySQL connection string for users, quiz content, and imports. |
-| `JWT_SECRET` | Yes | Random 32+ character secret used to sign administrator sessions. |
-| `OAUTH_SERVER_URL` | Yes for the current sign-in implementation | OAuth server URL used by the Quizio backend. |
-| `BUILT_IN_FORGE_API_URL` | Optional | Needed only for the Manus storage proxy. |
-| `BUILT_IN_FORGE_API_KEY` | Optional | Companion secret for that optional storage proxy. |
+## Supabase browser build arguments
 
-## Fly Build Arguments
+Set these in **Fly dashboard → Build arguments**. They are embedded in the browser bundle, so only use the Supabase publishable key—not a secret or service-role key.
 
-Set these in **Fly dashboard → Build arguments** because Expo embeds them into the browser dashboard during image creation. They are configuration values, not secrets.
+| Build argument | Value |
+|---|---|
+| `SUPABASE_URL` | `https://anjnjbiixzbwcmqritxj.supabase.co` |
+| `SUPABASE_PUBLISHABLE_KEY` | The active `sb_publishable_…` key from Supabase → Project Settings → API Keys. |
+| `QUIZIO_OWNER_EMAIL` | `aymenlasfar4@icloud.com` |
+| `EXPO_PUBLIC_API_BASE_URL` | Leave blank for this same-origin panel deployment. |
 
-| Build argument | Required | Purpose |
-|---|---:|---|
-| `VITE_APP_ID` | Yes for current OAuth | OAuth application identifier. |
-| `VITE_OAUTH_PORTAL_URL` | Yes for current OAuth | Browser sign-in portal URL. |
-| `OAUTH_SERVER_URL` | Yes for current OAuth | Same OAuth server URL used by the backend. |
-| `OWNER_OPEN_ID` | Yes | Your OAuth identifier; this account receives the `admin` role. |
-| `OWNER_NAME` | Recommended | Owner display name. |
-| `EXPO_PUBLIC_API_BASE_URL` | Leave blank for same-origin hosting | Set only if API uses another HTTPS domain. |
+## Owner sign-in
 
-## Fly Public Configuration
+The dashboard uses **Supabase Auth email/password**. After the Fly image is rebuilt with the arguments above:
 
-The following values are already present in `fly.toml`; they are not secrets. Change `PANEL_PUBLIC_URL` only if you attach a different Fly hostname or custom domain.
+1. Open `https://quizoi-management.fly.dev/admin`.
+2. Select **Create owner account**.
+3. Use exactly `aymenlasfar4@icloud.com` and choose a long private password.
+4. If Supabase asks for email confirmation, confirm the email before signing in.
 
-| Variable | Value for this Fly app | Purpose |
-|---|---|---|
-| `DEPLOY_TARGET` | `panel` | Enables the panel-only route policy. |
-| `PANEL_PUBLIC_URL` | `https://quizoi-management.fly.dev/admin` | Returns the administrator to the live dashboard after OAuth sign-in. |
+The Supabase `quizio_admins` allow-list and Row Level Security policies permit this account—and no other account—to create, import, edit, publish, pause, or remove quiz content.
 
-## Database and OAuth Preparation
+## Supabase dashboard setting
 
-The current Quizio data layer requires **MySQL**. Create or use a managed MySQL database reachable from Fly, set its TLS parameters in `DATABASE_URL` if required, and run the Drizzle migrations once from a trusted machine. The necessary dashboard tables are `users`, `quiz_categories`, `quiz_questions`, and `quiz_imports`.
-
-For the present OAuth implementation, the provider must allow this callback URL:
+In Supabase → Authentication → URL Configuration, set the Site URL to:
 
 ```text
-https://quizoi-management.fly.dev/api/oauth/callback
+https://quizoi-management.fly.dev
 ```
 
-## Verify Deployment
+Add the same domain to the allowed redirect URLs. This ensures account-confirmation links return to the deployed panel.
 
-After deployment, open these URLs:
+## Legacy variables
+
+The Supabase dashboard no longer needs `DATABASE_URL`, `OAUTH_SERVER_URL`, `VITE_APP_ID`, `VITE_OAUTH_PORTAL_URL`, `OWNER_OPEN_ID`, or `OWNER_NAME`. Those values may be removed after the Supabase panel is verified. Keep `JWT_SECRET` only if you continue using legacy Express API routes.
+
+## Verify deployment
 
 | URL | Expected result |
 |---|---|
-| `https://quizoi-management.fly.dev/api/health` | JSON containing `ok: true`. |
-| `https://quizoi-management.fly.dev/admin` | Private management dashboard sign-in screen. |
-| `https://quizoi-management.fly.dev/` | Redirects to the private dashboard. |
-| `https://quizoi-management.fly.dev/play` | `404`; player UI is not exposed by this deployment. |
+| `https://quizoi-management.fly.dev/admin` | Supabase owner email/password screen or the signed-in question library. |
+| `https://quizoi-management.fly.dev/` | Redirects to `/admin`. |
+| `https://quizoi-management.fly.dev/play` | `404`; the player remains unavailable on this deployment. |
+| `https://quizoi-management.fly.dev/api/health` | JSON health response. |
 
-This Fly deployment is **dashboard-only**. It is intentionally not a public Quizio player website and should not be used as the Android player API. Use a separate hosted player API when the mobile application needs remote content delivery. The dashboard and API routes share one hostname here so the administrator session cookie remains same-origin.

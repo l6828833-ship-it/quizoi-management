@@ -21,7 +21,7 @@ function NativeAdminPlaceholder() {
       <View style={styles.icon}><MaterialIcons name="public" size={38} color="#312E81" /></View>
       <Text style={styles.eyebrow}>QUIZIO ADMINISTRATION</Text>
       <Text style={styles.title}>Manage content in a browser</Text>
-      <Text style={styles.text}>For a Play Store-safe player experience, quiz creation and CSV upload are available only through the private browser dashboard. Open your published Quizio website and visit the secure <Text style={styles.url}>/admin</Text> page with the project-owner account.</Text>
+      <Text style={styles.text}>For a Play Store-safe player experience, quiz creation and CSV upload are available only through the private browser dashboard. Open your published Quizio website and visit the secure <Text style={styles.url}>/admin</Text> page with the Supabase owner account.</Text>
       <View style={styles.note}><MaterialIcons name="verified-user" size={22} color="#0F766E" /><Text style={styles.noteText}>The Android app can only play quizzes and download published questions.</Text></View>
     </ScreenContainer>
   );
