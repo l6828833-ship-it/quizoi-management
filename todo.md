@@ -71,3 +71,6 @@
 - [x] Validate the QUIZOI Expo access token with Expo CLI before EAS initialization.
 - [x] Retain the legacy ayoomen owner stored by the Manus Publish preview, following the user’s updated account choice.
 - [x] Reconfigure Quizio’s Android build path to use the user-selected ayoomen Expo account and its existing Publish binding.
+- [ ] Resolve the Manus Publish form rejecting the entered ayoomen Expo personal access token.
+- [x] Supersede the prior return-to-QUIZOI plan with the user-selected personal ayoomen-2-2 Expo account.
+- [x] Relink Quizio’s Android build configuration to the selected personal ayoomen-2-2 Expo account using a newly issued, unexposed personal token.

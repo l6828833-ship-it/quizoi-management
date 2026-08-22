@@ -16,6 +16,6 @@ describe("Expo build account", () => {
       },
     );
 
-    expect(output).toContain("ayoomen");
+    expect(output).toContain("ayoomen-2-2");
   }, 60_000);
 });
