@@ -49,3 +49,4 @@
 - [x] Transfer the complete verified Quizio source required for the panel-only Fly.io build into the selected GitHub repository.
 - [x] Repair the corrupted Docker ignore file so Fly receives the panel deployment source during builds.
 - [ ] Add a Fly.io deploy token to GitHub as `FLY_API_TOKEN` and run the repository-based deployment workflow.
+- [x] Add and lock react-native-css-interop so the Fly production web export resolves its JSX runtime.
